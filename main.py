@@ -1,4 +1,5 @@
 from PIL import Image
+from filters.mean_filter import MeanFilter
 
 def from_rgb_to_yiq(rgb):
     y = [(0.299 * r + 0.587 * g + 0.114 * b) for (r,g,b) in rgb]
@@ -18,8 +19,26 @@ def from_yiq_to_rgb(yiq):
 
     return list(zip(r,g,b))
 
+def read_filter_from_file(file):
+    filter = []
+
+    with open(file, mode='r') as f:
+        for line in f:
+            filter.append([float(line) for line in line.strip().split(' ')])
+    
+    return filter
+
+
 image = Image.open("Trabalhos-20211014/Woman.png").convert("RGB")
 pixels = image.getdata()
 
-yiq = from_rgb_to_yiq(list(pixels))
-rgb = from_yiq_to_rgb(yiq)
+mask = read_filter_from_file("teste.txt")
+
+filter = MeanFilter(mask)
+
+filter.set_image(image)
+
+image_after_filter = filter.apply_filter_on_image()
+
+image_after_filter.show()
+
