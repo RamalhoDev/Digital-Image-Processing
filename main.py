@@ -1,5 +1,6 @@
 from PIL import Image
 from filters.mean_filter import MeanFilter
+from filters.median_filter import MedianFilter
 
 def from_rgb_to_yiq(rgb):
     y = [(0.299 * r + 0.587 * g + 0.114 * b) for (r,g,b) in rgb]
@@ -34,7 +35,7 @@ pixels = image.getdata()
 
 mask = read_filter_from_file("teste.txt")
 
-filter = MeanFilter(mask)
+filter = MedianFilter(mask)
 
 filter.set_image(image)
 
