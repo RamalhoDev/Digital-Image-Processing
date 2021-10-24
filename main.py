@@ -1,6 +1,7 @@
 from PIL import Image
 from filters.mean_filter import MeanFilter, MeanFilterY
 from filters.median_filter import MedianFilter, MedianFilterY
+from filters.negative_filter import NegativeFilterRGB, NegativeFilterYIQ
 import numpy as np
 
 def from_rgb_to_yiq(rgb: np.ndarray):
@@ -27,27 +28,27 @@ def from_yiq_to_rgb(yiq: np.ndarray):
 
     return rgb
 
-def negative_rgb(rgb: np.ndarray):
-    negativeRGB = np.ndarray(np.shape(rgb))
+# def negative_rgb(rgb: np.ndarray):
+#     negativeRGB = np.ndarray(np.shape(rgb))
 
-    for i in range(np.shape(rgb)[0]):
-        for j in range(np.shape(rgb)[1]): 
-            negativeRGB[i,j,0] = 255 - rgb[i,j,0]
-            negativeRGB[i,j,1] = 255 - rgb[i,j,1]
-            negativeRGB[i,j,2] = 255 - rgb[i,j,2]
+#     for i in range(np.shape(rgb)[0]):
+#         for j in range(np.shape(rgb)[1]): 
+#             negativeRGB[i,j,0] = 255 - rgb[i,j,0]
+#             negativeRGB[i,j,1] = 255 - rgb[i,j,1]
+#             negativeRGB[i,j,2] = 255 - rgb[i,j,2]
 
-    return negativeRGB
+#     return negativeRGB
 
-def negative_yiq(yiq: np.ndarray):
-    negativeYIQ = np.ndarray(np.shape(yiq))
+# def negative_yiq(yiq: np.ndarray):
+#     negativeYIQ = np.ndarray(np.shape(yiq))
 
-    for i in range(np.shape(yiq)[0]):
-        for j in range(np.shape(yiq)[1]): 
-            negativeYIQ[i,j,0] = 1 - yiq[i,j,0]
-            negativeYIQ[i,j,1] = 1 - yiq[i,j,1]
-            negativeYIQ[i,j,2] = 1 - yiq[i,j,2]
+#     for i in range(np.shape(yiq)[0]):
+#         for j in range(np.shape(yiq)[1]): 
+#             negativeYIQ[i,j,0] = 1 - yiq[i,j,0]
+#             negativeYIQ[i,j,1] = 1 - yiq[i,j,1]
+#             negativeYIQ[i,j,2] = 1 - yiq[i,j,2]
 
-    return negativeYIQ
+#     return negativeYIQ
 
 def read_filter_from_file(file):
     with open(file, mode='r') as f:
@@ -71,15 +72,13 @@ def histogram_stretching(image : np.ndarray):
     
     return new_image
 
-
-
 image = Image.open("Trabalhos-20211014/Woman.png").convert("RGB")
 
 pixels = np.array(image)
 
 mask = read_filter_from_file("teste.txt")
 
-filter = MedianFilterY(mask)
+filter = NegativeFilterYIQ(mask)
 
 filter.set_image(from_rgb_to_yiq(pixels))
 
@@ -88,10 +87,9 @@ image_after_filter = from_yiq_to_rgb(image_after_filter)
 PIL_image = Image.fromarray(image_after_filter.astype(np.uint8))
 
 # image_after_filter = negative_rgb(image_after_filter)
-yiq = from_rgb_to_yiq(image_after_filter)
-yiq = negative_yiq(yiq)
+# yiq = from_rgb_to_yiq(image_after_filter)
+# yiq = negative_yiq(yiq)
 
 # image_after_filter = from_yiq_to_rgb(image_after_filter)
-
 
 PIL_image.show()
