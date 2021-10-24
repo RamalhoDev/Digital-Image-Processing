@@ -45,7 +45,7 @@ class Filter(ABC):
         return corr_image        
         
     @abstractmethod
-    def evaluate_pixel_rgb(self, indexes):
+    def evaluate_pixel_rgb(self, indexes, line=-1, column=-1):
         pass
     
     def apply_filter_on_image(self):
@@ -61,7 +61,7 @@ class Filter(ABC):
                 if indexes["end_line"] >= np.shape(self.image)[0] or indexes["end_column"] >= np.shape(self.image)[1]:
                     continue
 
-                new_image[i,j,0], new_image[i,j,1], new_image[i,j,2] = self.evaluate_pixel_rgb(indexes)
+                new_image[i,j,0], new_image[i,j,1], new_image[i,j,2] = self.evaluate_pixel_rgb(indexes, i, j)
 
         return new_image
         

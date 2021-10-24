@@ -1,5 +1,5 @@
 from PIL import Image
-from filters.mean_filter import MeanFilter
+from filters.mean_filter_y import MeanFilterY
 import numpy as np
 
 def from_rgb_to_yiq(rgb: np.ndarray):
@@ -55,15 +55,13 @@ pixels = np.array(image)
 
 mask = read_filter_from_file("teste.txt")
 
-filter = MeanFilter(mask)
+filter = MeanFilterY(mask)
 
-filter.set_image(pixels)
+filter.set_image(from_rgb_to_yiq(pixels))
 
 image_after_filter = filter.apply_filter_on_image()
 
-yiq = from_rgb_to_yiq(image_after_filter)
-
-image_after_filter = histogram_stretching(yiq)
+image_after_filter = histogram_stretching(image_after_filter)
 
 image_after_filter = from_yiq_to_rgb(image_after_filter)
 
