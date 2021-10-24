@@ -27,13 +27,14 @@ def from_yiq_to_rgb(yiq: np.ndarray):
     return rgb
 
 def read_filter_from_file(file):
-    filter = []
-
     with open(file, mode='r') as f:
         for line in f:
-            filter.append([float(line) for line in line.strip().split(' ')])
-    
-    return np.array(filter)
+            arguments = [line for line in line.strip().split(' ')]
+            m = int(arguments[1])
+            n = int(arguments[2])
+            filter = np.zeros((m, n))
+            filter = filter + (1.0/(m * n))
+            return filter
 
 def histogram_stretching(image : np.ndarray):
     min_value = image[:,:,0].min()
