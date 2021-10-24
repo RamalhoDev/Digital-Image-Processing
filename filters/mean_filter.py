@@ -1,22 +1,21 @@
 from .filter import Filter
+import numpy as np
 
 class MeanFilter(Filter):
 
-    def evaluate_pixel_rgb(self, indexes):
-        count_line = 0
-        new_r, new_g, new_b = (0,0,0)
-        width, height = self.image.size
+    def evaluate_pixel_rgb(self, indexes, line, column):
 
-        for i in range(indexes['begin_line'], indexes['end_line'] + 1):
-            count_column = 0
-            for j in range(indexes['begin_column'], indexes['begin_column'] + 1):
-                (r_channel, g_channel, b_channel) = self.data[i * width + j]
-
-                new_r += (r_channel * self.mask[count_line][count_column])
-                new_g += (g_channel * self.mask[count_line][count_column])
-                new_b += (b_channel * self.mask[count_line][count_column])
-
-                count_column += 1
-            count_line += 1
+        new_r = np.multiply(self.image[indexes['begin_line']:indexes['end_line'] + 1, indexes['begin_column']:indexes['end_column'] + 1,0], self.mask).sum()
+        new_g = np.multiply(self.image[indexes['begin_line']:indexes['end_line'] + 1, indexes['begin_column']:indexes['end_column'] + 1,1], self.mask).sum()
+        new_b = np.multiply(self.image[indexes['begin_line']:indexes['end_line'] + 1, indexes['begin_column']:indexes['end_column'] + 1,2], self.mask).sum()
 
         return round(new_r), round(new_g), round(new_b)
+
+class MeanFilterY(Filter):
+
+    def evaluate_pixel_rgb(self, indexes, line, column):
+
+        new_y = np.multiply(self.image[indexes['begin_line']:indexes['end_line'] + 1, indexes['begin_column']:indexes['end_column'] + 1,0], self.mask).sum()
+        
+        return new_y, self.image[line,column,1], self.image[line,column,2]
+
