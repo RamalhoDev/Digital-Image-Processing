@@ -26,6 +26,28 @@ def from_yiq_to_rgb(yiq: np.ndarray):
 
     return rgb
 
+def negative_rgb(rgb: np.ndarray):
+    negativeRGB = np.ndarray(np.shape(rgb))
+
+    for i in range(np.shape(rgb)[0]):
+        for j in range(np.shape(rgb)[1]): 
+            negativeRGB[i,j,0] = 255 - rgb[i,j,0]
+            negativeRGB[i,j,1] = 255 - rgb[i,j,1]
+            negativeRGB[i,j,2] = 255 - rgb[i,j,2]
+
+    return negativeRGB
+
+def negative_yiq(yiq: np.ndarray):
+    negativeYIQ = np.ndarray(np.shape(yiq))
+
+    for i in range(np.shape(yiq)[0]):
+        for j in range(np.shape(yiq)[1]): 
+            negativeYIQ[i,j,0] = 1 - yiq[i,j,0]
+            negativeYIQ[i,j,1] = 1 - yiq[i,j,1]
+            negativeYIQ[i,j,2] = 1 - yiq[i,j,2]
+
+    return negativeYIQ
+
 def read_filter_from_file(file):
     with open(file, mode='r') as f:
         for line in f:
@@ -49,6 +71,7 @@ def histogram_stretching(image : np.ndarray):
     return new_image
 
 
+
 image = Image.open("Trabalhos-20211014/Woman.png").convert("RGB")
 
 pixels = np.array(image)
@@ -61,7 +84,9 @@ filter.set_image(pixels)
 
 image_after_filter = filter.apply_filter_on_image()
 
+# image_after_filter = negative_rgb(image_after_filter)
 yiq = from_rgb_to_yiq(image_after_filter)
+yiq = negative_yiq(yiq)
 
 image_after_filter = histogram_stretching(yiq)
 
