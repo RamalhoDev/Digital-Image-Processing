@@ -1,6 +1,8 @@
 from PIL import Image
+from filters.emboss_filter import EmbossFilter
 from filters.mean_filter import MeanFilter, MeanFilterY
 from filters.median_filter import MedianFilter, MedianFilterY
+from filters.prewitt_filter import PrewittFilter
 import numpy as np
 
 def from_rgb_to_yiq(rgb: np.ndarray):
@@ -37,16 +39,30 @@ def read_filter_from_file(file):
             filter = filter + (1.0/(m * n))
             return filter
 
-def histogram_stretching(image : np.ndarray):
-    min_value = image[:,:,0].min()
-    max_value = image[:,:,0].max()
+# def histogram_stretching(image : np.ndarray):
+#     min_value = image[:,:,0].min()
+#     max_value = image[:,:,0].max()
 
-    new_image = image
+#     new_image = np.copy(image)
+
+#     for i in range(np.shape(image)[0]):
+#         for j in range(np.shape(image)[1]):
+#             new_image[i,j,0] = round(((image[i,j,0] - min_value)/(max_value - min_value)) * 255)
+    
+#     return new_image
+
+def histogram_stretching(image : np.ndarray):
+    min_value_r = image.min()
+    max_value_r = image.max()
+
+    new_image = np.copy(image)
 
     for i in range(np.shape(image)[0]):
         for j in range(np.shape(image)[1]):
-            new_image[i,j,0] = round(((image[i,j,0] - min_value)/(max_value - min_value)) * 255)
-    
+            new_image[i,j,0] = round(((image[i,j,0] - min_value_r)/(max_value_r - min_value_r)) * 255)
+            new_image[i,j,1] = round(((image[i,j,1] - min_value_r)/(max_value_r - min_value_r)) * 255)
+            new_image[i,j,2] = round(((image[i,j,2] - min_value_r)/(max_value_r - min_value_r)) * 255)
+
     return new_image
 
 
@@ -56,17 +72,39 @@ pixels = np.array(image)
 
 mask = read_filter_from_file("teste.txt")
 
-filter = MedianFilterY(mask)
+mask = np.zeros((3,3,2))
 
-filter.set_image(from_rgb_to_yiq(pixels))
+mask[2,:,0] = -1
+mask[0,:,0] = 1
+mask[:,0,1] = 1
+mask[:,2,1] = -1
+
+
+# mask = np.zeros((5,5))
+# mask[0,0] = -2
+# mask[0,2] = -1
+# mask[1,1] = -2
+# mask[1,2] = -1
+# mask[2,0] = -1
+# mask[2,1] = -1
+# mask[2,2] = 1
+# mask[2,3] = 1
+# mask[2,4] = 1
+# mask[3,2] = 1
+# mask[3,3] = 2
+# mask[4,2] = 1
+# mask[4,4] = 2
+
+
+filter = PrewittFilter(mask)
+
+filter.set_image(pixels)
 
 image_after_filter = filter.apply_filter_on_image()
-image_after_filter = from_yiq_to_rgb(image_after_filter)
-PIL_image = Image.fromarray(image_after_filter.astype(np.uint8))
 
-# image_after_filter = histogram_stretching(image_after_filter)
-
+# image_after_filter = from_rgb_to_yiq(image_after_filter)
+image_after_filter = histogram_stretching(image_after_filter)
 # image_after_filter = from_yiq_to_rgb(image_after_filter)
 
-
+PIL_image = Image.fromarray(image_after_filter.astype(np.uint8))
 PIL_image.show()

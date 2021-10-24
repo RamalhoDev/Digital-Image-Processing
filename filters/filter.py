@@ -18,8 +18,8 @@ class Filter(ABC):
         self.image = image
 
     def pre_process_indexes(self, line, column):
-        begin_line = line - self.x_center + (1 if (len(self.mask) % 2) == 0 else 0)
-        begin_column = column - self.y_center + (1 if (len(self.mask[0]) % 2) == 0 else 0)
+        begin_line = line - self.x_center + (1 if (self.m % 2) == 0 else 0)
+        begin_column = column - self.y_center + (1 if (self.n % 2) == 0 else 0)
         end_line = line + self.x_center
         end_column = column + self.y_center          
 
