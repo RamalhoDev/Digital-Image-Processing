@@ -8,9 +8,9 @@ def from_rgb_to_yiq(rgb: np.ndarray):
     for i in range(np.shape(yiq)[0]):
         for j in range(np.shape(yiq)[1]):
                 
-                 yiq[i,j,0] = (0.299 * rgb[i,j,0] + 0.587 * rgb[i,j,1] + 0.114 * rgb[i,j,2])
-                 yiq[i,j,1] = (0.596 * rgb[i,j,0] - 0.274 * rgb[i,j,1] - 0.322 * rgb[i,j,2])
-                 yiq[i,j,2] = (0.211 * rgb[i,j,0] - 0.523 * rgb[i,j,1] + 0.312 * rgb[i,j,2])
+                 yiq[i,j,0] = 0.299 * rgb[i,j,0] + 0.587 * rgb[i,j,1] + 0.114 * rgb[i,j,2]
+                 yiq[i,j,1] = 0.596 * rgb[i,j,0] - 0.274 * rgb[i,j,1] - 0.322 * rgb[i,j,2]
+                 yiq[i,j,2] = 0.211 * rgb[i,j,0] - 0.523 * rgb[i,j,1] + 0.312 * rgb[i,j,2]
 
     return yiq
 
@@ -62,7 +62,7 @@ image_after_filter = filter.apply_filter_on_image()
 
 yiq = from_rgb_to_yiq(image_after_filter)
 
-image_after_filter = histogram_stretching(image_after_filter)
+image_after_filter = histogram_stretching(yiq)
 
 image_after_filter = from_yiq_to_rgb(image_after_filter)
 
