@@ -14,8 +14,8 @@ class PrewittFilter(Filter):
 		b_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 2], self.mask[:,:,0]).sum()
 		b_vertical = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 2], self.mask[:,:,1]).sum()
 
-		new_r = abs(r_vertical) 
-		new_g = abs(g_vertical)
-		new_b = abs(b_vertical)
+		new_r = abs(r_vertical) + abs(r_horizontal)
+		new_g = abs(g_vertical) + abs(g_horizontal)
+		new_b = abs(b_vertical) + abs(b_horizontal)
 
 		return new_r, new_g, new_b
