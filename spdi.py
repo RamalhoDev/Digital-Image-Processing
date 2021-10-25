@@ -8,7 +8,7 @@ import numpy as np
 import sys
 import argparse as ap
 
-parser = ap.ArgumentParser(description = "System made for the lacture Processamento Digital de Imagens for the UFPB.")
+parser = ap.ArgumentParser(description = "System made for the lacture Processamento Digital de Imagens in UFPB.")
 parser.add_argument('image_path', help="Path to the image", type=str)
 parser.add_argument('mask_path', help="Path to the mask and filter", type=str)
 parser.add_argument('-v','--verbose', help="Enable RGB to YIQ conversion.", action="store_true", default = 0)
