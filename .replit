@@ -1,2 +1,2 @@
 language = "python"
-run = "python spdi.py Trabalhos-20211014/Woman.png masks/mean_3x3.txt"
+run = "python spdi.py imagens/Woman.png masks/mean_3x3.txt"

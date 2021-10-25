@@ -1,6 +1,6 @@
 import cv2
 
-def reproduce_example(image, template):
+def reproduce_example_6(image, template):
     result0 = cv2.matchTemplate(image[:,:,0], template[:,:,0],
         cv2.TM_CCOEFF_NORMED)
     result1 = cv2.matchTemplate(image[:,:,1], template[:,:,1],

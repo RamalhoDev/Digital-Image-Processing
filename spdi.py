@@ -3,6 +3,7 @@ from filters.emboss_filter import EmbossFilter
 from filters.mean_filter import MeanFilter, MeanFilterY
 from filters.median_filter import MedianFilter, MedianFilterY
 from filters.prewitt_filter import PrewittFilter
+from tarefas.tarefa6 import reproduce_example_6
 import numpy as np
 import sys
 import argparse as ap
@@ -14,6 +15,8 @@ parser.add_argument('-v','--verbose', help="Enable RGB to YIQ conversion.", acti
 parser.add_argument('-s','--stretching', help="Enable histogram stretching.", action="store_true")
 parser.add_argument('-y','--yiq_rgb', help="Enable YIQ to RGB conversion.", action="store_true")
 parser.add_argument('-r','--rgb_yiq', help="Enable RGB to YIQ conversion.", action="store_true")
+parser.add_argument('-6','--test_6', help="Run test 6.", action="store_true")
+parser.add_argument('-4','--test_4', help="Run test 4.", action="store_true")
 args = parser.parse_args()
 
 def from_rgb_to_yiq(rgb: np.ndarray):
@@ -114,7 +117,37 @@ image = Image.open(args.image_path).convert("RGB")
 
 pixels = np.array(image)
 
+if args.verbose:
+    print("Image:\n", image)
+
+
+if args.test_4:
+    mask1, _ = read_mask_from_file("masks/mean_1x21.txt")
+    mask2, _ = read_mask_from_file("masks/mean_21x1.txt")
+    filter = MeanFilter(mask1)
+    filter.set_image(pixels)
+
+    image_after_filter = filter.apply_filter_on_image()
+    pixels_new_image = image_after_filter
+
+    filter2 = MeanFilter(mask2)
+    filter.set_image(pixels_new_image)
+    image_after_filter2 = filter.apply_filter_on_image()
+    PIL_image = Image.fromarray(image_after_filter2.astype(np.uint8))
+    PIL_image.show()    
+    exit(3)
+
+
+if args.test_6:
+    mask = np.array(Image.open(args.mask_path).convert("RGB"))
+    if args.verbose:
+        print(mask)
+    reproduce_example_6(pixels, mask)
+    exit(2)
+
+
 mask, mode = read_mask_from_file(args.mask_path)
+
 if args.verbose:
     print("Using mask: ", mask)
 
