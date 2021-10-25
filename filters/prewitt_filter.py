@@ -12,13 +12,13 @@ class PrewittFilter(Filter):
 		b_horizontal = 0
 		b_vertical = 0
 
-		# r_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 0], self.mask[:,:,0]).sum()
+		r_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 0], self.mask[:,:,0]).sum()
 		r_vertical = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 0], self.mask[:,:,1]).sum()
 
-		# g_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 1], self.mask[:,:,0]).sum()
+		g_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 1], self.mask[:,:,0]).sum()
 		g_vertical = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 1], self.mask[:,:,1]).sum()
 		
-		# b_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 2], self.mask[:,:,0]).sum()
+		b_horizontal = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 2], self.mask[:,:,0]).sum()
 		b_vertical = np.multiply(self.image[indexes['begin_line']:indexes['end_line']+1,indexes['begin_column']:indexes['end_column']+1, 2], self.mask[:,:,1]).sum()
 
 		new_r = abs(r_vertical) + abs(r_horizontal)
