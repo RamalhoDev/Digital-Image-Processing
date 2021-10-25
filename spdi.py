@@ -5,10 +5,10 @@ from filters.median_filter import MedianFilter, MedianFilterY
 from filters.prewitt_filter import PrewittFilter
 from tarefas.tarefa6 import reproduce_example_6
 import numpy as np
-import sys
 import argparse as ap
+import cv2
 
-parser = ap.ArgumentParser(description = "System made for the lacture Processamento Digital de Imagens in UFPB.")
+parser = ap.ArgumentParser(description = "System made for the lecture Processamento Digital de Imagens in UFPB.")
 parser.add_argument('image_path', help="Path to the image", type=str)
 parser.add_argument('mask_path', help="Path to the mask and filter", type=str)
 parser.add_argument('-v','--verbose', help="Enable RGB to YIQ conversion.", action="store_true", default = 0)
@@ -137,8 +137,10 @@ if args.test4:
     PIL_image.show()    
     exit(3)
 
-if args.test_6:
-    mask = np.array(Image.open(args.mask_path).convert("RGB"))
+if args.test6:
+    pixels = cv2.imread(args.image_path)
+    mask = cv2.imread(args.mask_path)
+
     if args.verbose:
         print(mask)
     reproduce_example_6(pixels, mask)
