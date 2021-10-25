@@ -14,9 +14,9 @@ parser.add_argument('mask_path', help="Path to the mask and filter", type=str)
 parser.add_argument('-v','--verbose', help="Enable RGB to YIQ conversion.", action="store_true", default = 0)
 parser.add_argument('-s','--stretching', help="Enable histogram stretching.", action="store_true")
 parser.add_argument('-y','--yiq_rgb', help="Enable YIQ to RGB conversion.", action="store_true")
-parser.add_argument('-r','--rgb_yiq', help="Enable RGB to YIQ conversion.", action="store_true")
-parser.add_argument('-6','--test_6', help="Run test 6.", action="store_true")
-parser.add_argument('-4','--test_4', help="Run test 4.", action="store_true")
+parser.add_argument('-r','--rgb_yiq', help="Enable RGB to YIQ conversion.", action="store_true", default = 1)
+parser.add_argument('-4', '--test4', help="Run test 4.", action="store_true")
+parser.add_argument('-6','--test6', help="Run test 6.", action="store_true")
 args = parser.parse_args()
 
 def from_rgb_to_yiq(rgb: np.ndarray):
@@ -121,7 +121,7 @@ if args.verbose:
     print("Image:\n", image)
 
 
-if args.test_4:
+if args.test4:
     mask1, _ = read_mask_from_file("masks/mean_1x21.txt")
     mask2, _ = read_mask_from_file("masks/mean_21x1.txt")
     filter = MeanFilter(mask1)
@@ -136,7 +136,6 @@ if args.test_4:
     PIL_image = Image.fromarray(image_after_filter2.astype(np.uint8))
     PIL_image.show()    
     exit(3)
-
 
 if args.test_6:
     mask = np.array(Image.open(args.mask_path).convert("RGB"))
