@@ -4,7 +4,7 @@ import numpy as np
 
 class PrewittFilter(Filter):
 
-	def evaluate_pixel_rgb(self, indexes, line, column):
+	def evaluate_pixel(self, indexes, line, column):
 		r_horizontal = 0
 		r_vertical = 0
 		g_horizontal = 0

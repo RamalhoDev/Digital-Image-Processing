@@ -3,6 +3,7 @@ from filters.emboss_filter import EmbossFilter
 from filters.mean_filter import MeanFilter, MeanFilterY
 from filters.median_filter import MedianFilter, MedianFilterY
 from filters.prewitt_filter import PrewittFilter
+from filters.negative_filter import NegativeFilterRGB, NegativeFilterYIQ
 from tarefas.tarefa6 import reproduce_example_6
 import numpy as np
 import argparse as ap
@@ -82,21 +83,23 @@ def read_mask_from_file(file):
                 assert False, f"{m} x {n} prewitt filter not implemented yet"
         elif mode == "median":
             filter = np.ones((m, n))
+        elif mode == "negative":
+            filter = np.ones((1,1))
         else:
             assert False, f"{m} x {n} {mode} filter not implemented yet (maybe a typo in {mode}?) modes supported:\nprewitt, emboss, mean, median\n"
     return filter, mode
 
-# def histogram_stretching(image : np.ndarray):
-#     min_value = image[:,:,0].min()
-#     max_value = image[:,:,0].max()
+def histogram_stretching_y(image : np.ndarray):
+    min_value = image[:,:,0].min()
+    max_value = image[:,:,0].max()
 
-#     new_image = np.copy(image)
+    new_image = np.copy(image)
 
-#     for i in range(np.shape(image)[0]):
-#         for j in range(np.shape(image)[1]):
-#             new_image[i,j,0] = round(((image[i,j,0] - min_value)/(max_value - min_value)) * 255)
+    for i in range(np.shape(image)[0]):
+        for j in range(np.shape(image)[1]):
+            new_image[i,j,0] = round(((image[i,j,0] - min_value)/(max_value - min_value)) * 255)
     
-#     return new_image
+    return new_image
 
 def histogram_stretching(image : np.ndarray):
     min_value_r = image.min()
@@ -122,17 +125,19 @@ if args.verbose:
 
 
 if args.test4:
+    pixels_yiq = from_rgb_to_yiq(pixels)
     mask1, _ = read_mask_from_file("masks/mean_1x21.txt")
     mask2, _ = read_mask_from_file("masks/mean_21x1.txt")
-    filter = MeanFilter(mask1)
-    filter.set_image(pixels)
+    filter = MeanFilterY(mask1)
+    filter.set_image(pixels_yiq)
 
     image_after_filter = filter.apply_filter_on_image()
     pixels_new_image = image_after_filter
 
-    filter2 = MeanFilter(mask2)
+    filter2 = MeanFilterY(mask2)
     filter.set_image(pixels_new_image)
     image_after_filter2 = filter.apply_filter_on_image()
+
     PIL_image = Image.fromarray(image_after_filter2.astype(np.uint8))
     PIL_image.show()    
     exit(3)
@@ -153,26 +158,40 @@ if args.verbose:
     print("Using mask: ", mask)
 
 filter = None
+image_after_filter = None
+if(args.yiq_rgb):
+    pixels = from_rgb_to_yiq(pixels)
+
 if mode == "mean":
-    filter = MeanFilter(mask)
+    if(args.yiq_rgb):
+        filter = MeanFilterY(mask)
+    else:
+        filter = MeanFilter(mask)
 elif mode == "emboss":
     filter = EmbossFilter(mask)
 elif mode == "prewitt":
     filter = PrewittFilter(mask)
 elif mode == "median":
     filter = MedianFilterY(mask)
-else:
-    assert False, "Unreachable.\n"
-filter.set_image(pixels)
+elif mode == "negative":
+    if(args.yiq_rgb):
+        filter = NegativeFilterYIQ(mask)
+    else:
+        filter = NegativeFilterRGB(mask)
 
+filter.set_image(pixels)
 image_after_filter = filter.apply_filter_on_image()
 
-if args.rgb_yiq:
-    image_after_filter = from_rgb_to_yiq(image_after_filter)
-if args.stretching:
-    image_after_filter = histogram_stretching(image_after_filter)
-if args.yiq_rgb:
+if(args.stretching):
+    if(args.yiq_rgb):
+        image_after_filter = histogram_stretching_y(image_after_filter)
+    else:
+        image_after_filter = histogram_stretching(image_after_filter)        
+
+if(args.yiq_rgb):
     image_after_filter = from_yiq_to_rgb(image_after_filter)
 
 PIL_image = Image.fromarray(image_after_filter.astype(np.uint8))
 PIL_image.show()
+
+
